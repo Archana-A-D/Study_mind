@@ -1,10 +1,10 @@
-# 📚 STYDY_ANALYSER
+# 📚 STUDY_ANALYSER
 
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![Gemini AI](https://img.shields.io/badge/Google_Gemini-AI?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 
-**STYDY_ANALYSER** is a comprehensive web application designed to empower students with AI-powered study management tools. Track study sessions with focus metrics, manage assignments and subjects with deadlines, and get intelligent assistance through integrated Google Gemini AI chat. Built with Django for robust backend, user authentication, and intuitive dashboards.
+**STUDY_ANALYSER** is a comprehensive web application designed to empower students with AI-powered study management tools. Track study sessions with focus metrics, manage assignments and subjects with deadlines, and get intelligent assistance through integrated Google Gemini AI chat. Built with Django for robust backend, user authentication, and intuitive dashboards.
 
 ## ✨ Features
 - **AI-Powered Chat Assistant**: Real-time conversation with Google Gemini AI for study tips, explanations, and productivity advice (local chat interface).
