@@ -1,92 +1,113 @@
-# StudyMind (Study Analyser)
+# 📚 STYDY_ANALYSER
 
-A Django web app to log study sessions, track assignments, and generate an AI-assisted daily study timetable based on:
-- upcoming deadlines, and
-- your historical focus levels per subject.
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![Gemini AI](https://img.shields.io/badge/Google_Gemini-AI?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 
-## Features
+**STYDY_ANALYSER** is a comprehensive web application designed to empower students with AI-powered study management tools. Track study sessions with focus metrics, manage assignments and subjects with deadlines, and get intelligent assistance through integrated Google Gemini AI chat. Built with Django for robust backend, user authentication, and intuitive dashboards.
 
-- **Student dashboard**: log study sessions (duration + focus level), see totals and streaks
-- **Assignments**: add deadlines + estimated hours, mark completed
-- **AI-generated timetable**: prioritizes urgent deadlines and weaker-focus subjects
-- **Chat widget (optional)**: powered by Google Gemini via `google-generativeai`
+## ✨ Features
+- **AI-Powered Chat Assistant**: Real-time conversation with Google Gemini AI for study tips, explanations, and productivity advice (local chat interface).
+- **Study Session Tracking**: Log sessions with duration (hours) and focus level (0-100%), linked to subjects or assignments.
+- **Assignment Management**: CRUD operations for assignments with titles, deadlines, estimated hours, and completion status.
+- **Subject Organization**: User-specific subjects for categorizing studies.
+- **User Dashboards**: Personalized admin/user dashboards, onboarding, login/register.
+- **Responsive Templates**: Clean management interfaces for sessions, assignments, subjects (delete/edit/list).
+- **Data Integrity**: Django models with constraints, indexes, migrations for production-ready DB.
 
-## How the timetable is generated
+## 🛠️ Tech Stack
+| Category | Technologies |
+|----------|--------------|
+| **Backend** | Django 6.0.3, Python 3.x |
+| **AI/ML** | Google Gemini (generativeai) |
+| **Database** | Django ORM (SQLite/PostgreSQL compatible) |
+| **Environment** | python-dotenv |
+| **Frontend** | Django Templates, HTML/CSS/JS, Static files |
+| **Deployment** | ASGI/WGSI ready |
 
-The schedule you see in the **Schedule** tab is computed server-side in:
-- `STYDY_ANALYSER/studyanalyser/student/views.py` -> `generate_study_plan(user)`
+## 📸 Screenshots
+*(Add your screenshots here)*
+```
+- User Dashboard: ![Dashboard]()
+- AI Chat Interface: ![Chat]()
+- Assignment Manager: ![Assignments]()
+- Study Sessions: ![Sessions]()
+```
 
-High-level logic:
-1. Picks up to **2 urgent assignments** due within the next **3 days** (and not completed).
-2. Computes **average focus % per subject** from your `StudySession` history.
-3. Fills a fixed set of daily **time slots**:
-   - urgent assignments first (also estimates remaining hours from logged sessions)
-   - then remaining subjects sorted by **lowest average focus first**
-4. Labels each slot as:
-   - **Deep Work** when avg focus `< 50%`
-   - **Standard Study** when `50-79%`
-   - **Review** when `>= 80%`
+## 🚀 Quick Start
 
-The dashboard view (`user_dashboard`) calls `generate_study_plan(request.user)` on each page load, so the timetable updates automatically when you log sessions / add assignments / mark work done.
+### Prerequisites
+- Python 3.8+
+- Git
 
-## Requirements
+### Setup
+```bash
+# Clone the repo
+git clone <your-repo-url>
+cd STYDY_ANALYSER/STYDY_ANALYSER/studyanalyser
 
-- Python 3.x (use a version compatible with your Django version)
-- Django (see `STYDY_ANALYSER/studyanalyser/requirements.txt`)
+# Create virtual environment
+python -m venv venv
+# Windows: venv\\Scripts\\activate
+# macOS/Linux: source venv/bin/activate
 
-## Run locally
-
-From the repo root:
-
-```powershell
-cd .\STYDY_ANALYSER\studyanalyser
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+# Install dependencies
 pip install -r requirements.txt
+
+# Set environment variable (get free API key from https://aistudio.google.com/app/apikey)
+echo GEMINI_API_KEY=your_api_key_here > .env
+
+# Run migrations
+python manage.py makemigrations
 python manage.py migrate
+
+# Create superuser
+python manage.py createsuperuser
+
+# Start development server
 python manage.py runserver
 ```
 
-Open `http://127.0.0.1:8000/`.
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser. Register/login to access dashboards.
 
-## Environment variables
-
-Create a `.env` file (recommended) or set environment variables in your shell.
-
-### Django
-
-- `DJANGO_SECRET_KEY` (recommended for production)
-- `DJANGO_DEBUG` (`1` for dev, `0` for production)
-- `DJANGO_ALLOWED_HOSTS` (comma-separated, e.g. `example.com,www.example.com`)
-- `DJANGO_TIME_ZONE` (default: `Asia/Kolkata`)
-
-### Gemini chat (optional)
-
-- `GEMINI_API_KEY` (required to enable chat)
-- `GEMINI_MODEL` (optional, default: `gemini-1.5-flash`)
-
-## GitHub (push this project)
-
-This repo already includes a `.gitignore` that avoids committing secrets and local data (like `.env`, `db.sqlite3`, and `venv/`).
-
-Typical workflow:
-
-```powershell
-cd C:\Users\VICTUS\Downloads\STUDY_ANALYSER\STYDY_ANALYSER
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-git push -u origin main
+## 🏗️ Project Structure
+```
+STYDY_ANALYSER/
+├── README.md
+├── STYDY_ANALYSER/studyanalyser/
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── student/           # Main app
+│   │   ├── models.py      # Subject, Assignment, StudySession
+│   │   ├── views.py
+│   │   ├── gemini_client.py # AI client
+│   │   └── chat_local.py  # Chat views
+│   ├── templates/student/ # Dashboards & management UIs
+│   └── studyanalyser/     # Project settings
+└── TODO.md
 ```
 
-Note: In the remote URL, don’t include `<` `>` — replace them with your real username/repo.
+## 🔧 Environment Configuration
+Create `.env` file:
+```
+GEMINI_API_KEY=your_api_key_here
+```
 
-## Project structure (important paths)
+## 🤝 Contributing
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
-- `STYDY_ANALYSER/studyanalyser/manage.py` – Django entrypoint
-- `STYDY_ANALYSER/studyanalyser/studyanalyser/settings.py` – settings (env-driven)
-- `STYDY_ANALYSER/studyanalyser/student/` – app (models, views, forms, chat)
-- `STYDY_ANALYSER/studyanalyser/templates/` – templates (dashboard UI)
-- `STYDY_ANALYSER/studyanalyser/static/` – static assets (dev)
+## 📄 License
+This project is open-source under MIT License - see [LICENSE](LICENSE) file (add if needed).
+
+## 🙏 Acknowledgments
+- [Django](https://www.djangoproject.com/)
+- [Google Gemini API](https://ai.google.dev/)
+- Django community templates & best practices
+
+---
+
+⭐ **Star this repo if it helps your studies!** 🚀
