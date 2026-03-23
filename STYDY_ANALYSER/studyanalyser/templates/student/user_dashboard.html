@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - StudyMind AI</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background-color: #F4F7FE; 
+            font-family: 'Poppins', sans-serif;
+            color: #2B3674;
+        }
+
+        /* Top Navbar */
+        .navbar-custom {
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Sidebar container */
+        .sidebar { 
+            min-height: calc(100vh - 80px); 
+            background: white; 
+            border-radius: 20px;
+            padding: 20px 10px;
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.05);
+            margin-left: 15px;
+        }
+
+        .sidebar a { 
+            color: #A3AED0; 
+            text-decoration: none; 
+            padding: 12px 20px; 
+            display: block; 
+            font-weight: 600;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover, .sidebar a.active { 
+            color: #4318FF; 
+            background: #F4F7FE; 
+        }
+
+        /* Elegant Widget Cards */
+        .widget-card { 
+            background: white;
+            border-radius: 20px; 
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.08); 
+            border: none;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .widget-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .widget-bg-blue { background: #F4F7FE; color: #4318FF; }
+        .widget-bg-green { background: #E6F8ED; color: #05CD99; }
+        .widget-bg-orange { background: #FFF4E5; color: #FFB547; }
+
+        .widget-title { color: #A3AED0; font-size: 0.9rem; font-weight: 600; }
+        .widget-value { font-size: 1.8rem; font-weight: 700; color: #2B3674; margin-bottom: 0;}
+
+        /* Tables & Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 20px; 
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.08); 
+            border: none;
+            padding: 25px;
+        }
+
+        .table > :not(caption) > * > * {
+            border-bottom-color: #E0E5F2;
+            padding: 15px 10px;
+            color: #2B3674;
+        }
+        
+        .table th {
+            color: #A3AED0;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-custom {
+            background-color: #4318FF;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover { background-color: #3311DB; color: white; }
+
+        /* Schedule Timetable */
+        .schedule-event {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border-left: 4px solid;
+        }
+        .schedule-event:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Chat widget (fixed overlay; doesn't change layout) */
+        #chatFab {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            z-index: 1055;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #4318FF;
+            color: #fff;
+            border: none;
+            box-shadow: 0 14px 30px rgba(67, 24, 255, 0.35);
+            font-weight: 800;
+        }
+
+        #chatPanel {
+            position: fixed;
+            right: 22px;
+            bottom: 90px;
+            z-index: 1055;
+            width: min(420px, calc(100vw - 44px));
+            height: 520px;
+            max-height: calc(100vh - 140px);
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 18px 55px rgba(112, 144, 176, 0.22);
+            display: none;
+            overflow: hidden;
+        }
+
+        #chatPanel.show { display: block; }
+        #chatHeader {
+            background: #111C44;
+            color: #fff;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #chatMessages {
+            padding: 14px;
+            height: calc(100% - 118px);
+            overflow-y: auto;
+            background: #F4F7FE;
+        }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 10px 12px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            line-height: 1.35;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .chat-user {
+            background: #4318FF;
+            color: #fff;
+            margin-left: auto;
+            border-bottom-right-radius: 6px;
+        }
+
+        .chat-bot {
+            background: #fff;
+            color: #2B3674;
+            margin-right: auto;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 10px 25px rgba(112, 144, 176, 0.08);
+        }
+
+        #chatComposer {
+            padding: 12px;
+            background: #fff;
+            border-top: 1px solid #E0E5F2;
+        }
+
+        #chatInput {
+            border-radius: 12px;
+            border: 1px solid #E0E5F2;
+            padding: 10px 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-custom">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0" style="color: #2B3674;">Study Analytics</h4>
+            <div>
+                <span class="text-muted fw-semibold me-3">Welcome, {{ request.user.first_name|default:request.user.username }}! 👋</span>
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger" style="border-radius: 10px;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mb-5">
+        <div class="row">
+            
+            <!-- Sidebar -->
+            <div class="col-md-2 d-none d-md-block">
+                <div class="sidebar" role="tablist">
+                    <h6 class="text-uppercase text-muted fw-bold px-3 mb-3" style="font-size: 0.75rem;">Main Menu</h6>
+                    <a href="#overview" data-bs-toggle="tab" data-bs-target="#overview" role="tab" class="active">📊 Overview</a>
+                    <a href="#sessions" data-bs-toggle="tab" data-bs-target="#sessions" role="tab">⏱️ Study Sessions</a>
+                    <a href="#schedule" data-bs-toggle="tab" data-bs-target="#schedule" role="tab">📅 Schedule</a>
+                    <a href="#settings" data-bs-toggle="tab" data-bs-target="#settings" role="tab">⚙️ Settings</a>
+                    <div class="mx-3 my-3" style="border-top: 1px solid #E0E5F2;"></div>
+                    <a href="{% url 'manage_subjects' %}">🗂️ Manage Subjects</a>
+                    <a href="{% url 'manage_assignments' %}">📝 Manage Assignments</a>
+                    <a href="{% url 'manage_sessions' %}">🧠 Manage Sessions</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-10 pe-4 tab-content">
+                
+                <!-- OVERVIEW TAB -->
+                <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                    <h5 class="fw-bold mb-4">Your Dashboard</h5>
+
+                    <!-- Alerts System -->
+                    {% if ai_plan.alerts %}
+                        {% for alert in ai_plan.alerts %}
+                        <div class="alert alert-danger d-flex align-items-center mb-4" style="border-radius: 12px; border: none;">
+                            <div class="fs-5 me-2"></div>
+                            <div><strong>{{ alert }}</strong></div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                <!-- Stat Cards Row -->
+                <div class="row mb-4 g-4">
+                    <div class="col-md-4">
+                        <div class="widget-card d-flex align-items-center">
+                            <div class="widget-icon widget-bg-blue me-3">📚</div>
+                            <div>
+                                <h6 class="widget-title">Total Hours Studied</h6>
+                                <h3 class="widget-value">{{ total_hours }} hrs</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="widget-card d-flex align-items-center">
+                            <div class="widget-icon widget-bg-green me-3">🔥</div>
+                            <div>
+                                <h6 class="widget-title">Current Study Streak</h6>
+                                <h3 class="widget-value">{{ streak }} Days</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="widget-card d-flex align-items-center">
+                            <div class="widget-icon widget-bg-orange me-3">🎯</div>
+                            <div>
+                                <h6 class="widget-title">Average Focus Score</h6>
+                                <h3 class="widget-value">{{ avg_focus }}%</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Sessions Table -->
+                <div class="content-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Recent Study Sessions</h5>
+                        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#logSessionModal">+ Log Session</button>
+                    </div>
+
+                    {% if messages %}
+                    <div class="alert alert-success mt-2" style="border-radius: 12px; font-size: 0.9rem; padding: 10px 15px;">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Subject</th>
+                                    <th>Duration</th>
+                                    <th>Focus Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for session in sessions %}
+                                <tr>
+                                    <td class="fw-semibold">{{ session.created_at|date:"l, g:i A" }}</td>
+                                    <td>{{ session.subject }}</td>
+                                    <td class="fw-bold">{{ session.duration }} hours</td>
+                                    <td>
+                                        {% if session.focus_level >= 80 %}
+                                            <span class="badge bg-success" style="border-radius: 8px;">High ({{ session.focus_level }}%)</span>
+                                        {% elif session.focus_level >= 50 %}
+                                            <span class="badge bg-warning text-dark" style="border-radius: 8px;">Medium ({{ session.focus_level }}%)</span>
+                                        {% else %}
+                                            <span class="badge bg-danger" style="border-radius: 8px;">Low ({{ session.focus_level }}%)</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No study sessions logged yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div> <!-- End Overview Tab -->
+
+                <!-- STUDY SESSIONS TAB -->
+                <div class="tab-pane fade" id="sessions" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Study Sessions Log</h5>
+                        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#logSessionModal">+ Log Session</button>
+                    </div>
+                    <div class="content-card">
+                        <div class="table-responsive">
+                            <table class="table table-borderless align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Subject</th>
+                                        <th>Duration</th>
+                                        <th>Focus Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for session in sessions %}
+                                    <tr>
+                                        <td class="fw-semibold">{{ session.created_at|date:"l, g:i A" }}</td>
+                                        <td>{{ session.subject }}</td>
+                                        <td class="fw-bold">{{ session.duration }} hours</td>
+                                        <td>
+                                            {% if session.focus_level >= 80 %}
+                                                <span class="badge bg-success" style="border-radius: 8px;">High ({{ session.focus_level }}%)</span>
+                                            {% elif session.focus_level >= 50 %}
+                                                <span class="badge bg-warning text-dark" style="border-radius: 8px;">Medium ({{ session.focus_level }}%)</span>
+                                            {% else %}
+                                                <span class="badge bg-danger" style="border-radius: 8px;">Low ({{ session.focus_level }}%)</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No study sessions logged yet.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div> <!-- End Study Sessions Tab -->
+
+                <!-- SCHEDULE TAB -->
+                <div class="tab-pane fade" id="schedule" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="fw-bold mb-0">AI-Generated Study Plan</h5>
+                            <p class="text-muted mb-0" style="font-size: 0.85rem;">Personalized schedules based on your focus and duration data.</p>
+                        </div>
+                        <form method="POST" action="{% url 'user_dashboard' %}" class="m-0">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="generate_new_plan">
+                            <button type="submit" class="btn btn-custom">✨ Generate New Plan</button>
+                        </form>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- AI Insight Alert -->
+                        <div class="col-12">
+                            <div class="alert d-flex align-items-center mb-0" style="background-color: #E6EDFF; border-radius: 15px; border: none; color: #2B3674;">
+                                <div class="fs-4 me-3">🤖</div>
+                                <div>
+                                    <strong>{{ ai_plan.insight }}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Timeline -->
+                        {% if ai_plan.timeline %}
+                        <div class="col-12">
+                            <div class="content-card">
+                                <h6 class="fw-bold mb-4">Today's Optimal Schedule</h6>
+                                
+                                <div class="position-relative border-start border-2 ms-3 ms-md-4 border-primary pb-2">
+                                    {% for item in ai_plan.timeline %}
+                                    <div class="position-relative mb-4 ps-4">
+                                        <div class="position-absolute rounded-circle" style="background-color: {{ item.color }}; width: 14px; height: 14px; left: -8px; top: 4px;"></div>
+                                        <div class="fw-bold" style="color: {{ item.color }}; font-size: 0.9rem;">{{ item.time }}</div>
+                                        <div class="schedule-event mt-2" style="background-color: {{ item.bg_color }}; border-left-color: {{ item.color }}; color: #2B3674;">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">{{ item.title }}</h6>
+                                                    <p class="text-muted mb-0" style="font-size: 0.85rem;">{{ item.reason }}</p>
+                                                </div>
+                                                {% if item.assignment_id %}
+                                                <form method="POST" action="{% url 'user_dashboard' %}" class="m-0">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="action" value="mark_done">
+                                                    <input type="hidden" name="assignment_id" value="{{ item.assignment_id }}">
+                                                    <button type="submit" class="btn btn-sm" style="background-color: white; color: {{ item.color }}; border: 1px solid {{ item.color }}; font-weight: 600; border-radius: 8px;">Mark Done ✔️</button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12">
+                            <div class="content-card text-center p-5">
+                                <div style="font-size: 50px; margin-bottom: 20px;">📊</div>
+                                <h4 style="color: #2B3674; font-weight: 700;">More Data Needed</h4>
+                                <p class="text-muted">Start logging your study sessions in the Overview tab or Study Sessions tab. As you log more sessions, our AI will generate personalized plans here.</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SETTINGS TAB -->
+                <div class="tab-pane fade" id="settings" role="tabpanel">
+                    <h5 class="fw-bold mb-4">Settings & Profile</h5>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="content-card h-100">
+                                <h6 class="fw-bold mb-4">Add New Subject</h6>
+                                <form method="POST" action="{% url 'user_dashboard' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="add_subject">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Subject Name</label>
+                                        <input type="text" name="subject_name" class="form-control" required placeholder="e.g. Mathematics" style="border-radius: 12px; padding: 12px 15px;">
+                                    </div>
+                                    <button type="submit" class="btn btn-custom w-100">Add Subject</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="content-card h-100">
+                                <h6 class="fw-bold mb-4">Add New Works / Assignments</h6>
+                                <form method="POST" action="{% url 'user_dashboard' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="add_assignment">
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Title (What do you need to do?)</label>
+                                        <input type="text" name="title" class="form-control" required placeholder="e.g. Physics Midterm" style="border-radius: 12px; padding: 10px 15px;">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted">Subject</label>
+                                        <select name="subject_id" class="form-select" required style="border-radius: 12px; padding: 10px 15px;">
+                                            <option value="" disabled selected>Select a subject...</option>
+                                            {% for subject in subjects %}
+                                            <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                            {% empty %}
+                                            <option value="" disabled>No subjects found. Add one first.</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label text-muted">Deadline</label>
+                                            <input type="date" name="deadline" class="form-control" required style="border-radius: 12px; padding: 10px 15px;">
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label text-muted">Est. Hours</label>
+                                            <input type="number" step="0.5" name="estimated_hours" class="form-control" required placeholder="e.g. 2.5" style="border-radius: 12px; padding: 10px 15px;">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-custom w-100" style="background-color: #05CD99;">Add to Schedule</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="content-card">
+                                <h6 class="fw-bold mb-3">Profile Information</h6>
+                                <p class="mb-1"><strong>Name:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+                                <p class="mb-3"><strong>Email:</strong> {{ request.user.email }}</p>
+                                
+                                <div class="mt-4 pt-3 border-top">
+                                    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Sign Out of Account</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Log Session Modal -->
+    <div class="modal fade" id="logSessionModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 15px;">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold" style="color: #2B3674;">Log New Session</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="POST" action="{% url 'user_dashboard' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="log_session">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="color: #2B3674;">Subject</label>
+                    <select name="subject_id" class="form-select" required style="border-radius: 12px; padding: 12px 15px; border: 1px solid #E0E5F2;">
+                        <option value="" disabled selected>Select your subject</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                        {% empty %}
+                        <option value="" disabled>No subjects found. Please run setup.</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="color: #2B3674;">Duration (Hours)</label>
+                    <input type="number" step="0.5" name="duration" class="form-control" required placeholder="e.g. 1.5">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="color: #2B3674;">Focus Level (0-100)</label>
+                    <input type="number" min="0" max="100" name="focus_level" class="form-control" required placeholder="e.g. 85">
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="submit" class="btn btn-custom w-100">Save Session</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Chat widget -->
+    <button id="chatFab" type="button" aria-label="Open chat">CHAT</button>
+    <div id="chatPanel" aria-live="polite">
+        <div id="chatHeader">
+            <div class="fw-bold">StudyMind Chat</div>
+            <button id="chatClose" type="button" class="btn btn-sm btn-light" style="border-radius: 10px; font-weight: 700;">Close</button>
+        </div>
+        <div id="chatMessages">
+            <div class="chat-bubble chat-bot">Hi! Ask me about your schedule, assignments, or how to study better.</div>
+        </div>
+        <div id="chatComposer">
+            <div class="input-group">
+                <input id="chatInput" type="text" class="form-control" placeholder="Type your message..." autocomplete="off">
+                <button id="chatSend" class="btn btn-custom" type="button">Send</button>
+            </div>
+            <div id="chatHint" class="text-muted mt-2" style="font-size: 0.85rem;">Chat works only if `GEMINI_API_KEY` is configured.</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var hash = window.location.hash;
+            var targetTab = hash || sessionStorage.getItem('activeDashboardTab');
+            
+            if (targetTab) {
+                var tabEl = document.querySelector('.sidebar a[href="' + targetTab + '"]');
+                if (tabEl) {
+                    var tab = new bootstrap.Tab(tabEl);
+                    tab.show();
+                }
+            }
+            
+            // Save active tab to session storage when clicked
+            var tabLinks = document.querySelectorAll('.sidebar a[data-bs-toggle="tab"]');
+            tabLinks.forEach(function(tabLink) {
+                tabLink.addEventListener('shown.bs.tab', function(event) {
+                    var currentTab = event.target.getAttribute('href');
+                    sessionStorage.setItem('activeDashboardTab', currentTab);
+                    window.history.replaceState(null, null, currentTab);
+                });
+            });
+        });
+    </script>
+
+    <script>
+        (function() {
+            var chatUrl = "{% url 'chat_api' %}";
+            var fab = document.getElementById("chatFab");
+            var panel = document.getElementById("chatPanel");
+            var closeBtn = document.getElementById("chatClose");
+            var input = document.getElementById("chatInput");
+            var sendBtn = document.getElementById("chatSend");
+            var messages = document.getElementById("chatMessages");
+
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie !== "") {
+                    var cookies = document.cookie.split(";");
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            function addBubble(text, cls) {
+                var div = document.createElement("div");
+                div.className = "chat-bubble " + cls;
+                div.textContent = text;
+                messages.appendChild(div);
+                messages.scrollTop = messages.scrollHeight;
+                return div;
+            }
+
+            function toggle(open) {
+                if (open) {
+                    panel.classList.add("show");
+                    setTimeout(function() { input && input.focus(); }, 50);
+                } else {
+                    panel.classList.remove("show");
+                }
+            }
+
+            function send() {
+                var text = (input.value || "").trim();
+                if (!text) return;
+                input.value = "";
+
+                addBubble(text, "chat-user");
+                var loading = addBubble("Thinking...", "chat-bot");
+                sendBtn.disabled = true;
+
+                var csrftoken = getCookie("csrftoken");
+                var body = "prompt=" + encodeURIComponent(text);
+                fetch(chatUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": csrftoken
+                    },
+                    credentials: "same-origin",
+                    body: body
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    loading.textContent = (data && data.response) ? data.response : "No response.";
+                })
+                .catch(function(err) {
+                    loading.textContent = "Error: " + (err && err.message ? err.message : "Request failed");
+                })
+                .finally(function() {
+                    sendBtn.disabled = false;
+                    messages.scrollTop = messages.scrollHeight;
+                });
+            }
+
+            fab.addEventListener("click", function() { toggle(!panel.classList.contains("show")); });
+            closeBtn.addEventListener("click", function() { toggle(false); });
+            sendBtn.addEventListener("click", send);
+            input.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    send();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

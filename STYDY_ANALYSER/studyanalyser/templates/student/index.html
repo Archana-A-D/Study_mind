@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMind AI - Smart Study Habit Analyzer</title>
+    
+    <!-- Bootstrap 5 for grid and basic layout -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins for a modern, elegant look -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Elegant Theme - Very easy to explain to your guide! */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FE; /* Soft modern background */
+            color: #2B3674; /* Dark blue text instead of harsh black */
+        }
+        
+        /* Modern Navbar */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            padding: 15px 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #4318FF !important; /* Elegant Indigo */
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-weight: 700;
+            font-size: 3.5rem;
+            color: #2B3674;
+            margin-bottom: 20px;
+        }
+
+        .hero-title span {
+            color: #4318FF; /* Highlight word */
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #A3AED0;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+
+        /* Custom Elegant Buttons */
+        .btn-custom {
+            background-color: #4318FF;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px; /* Pill shape */
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(67, 24, 255, 0.2);
+        }
+
+        .btn-custom:hover {
+            background-color: #3311DB;
+            color: white;
+            transform: translateY(-2px); /* Slight lift effect */
+        }
+
+        .btn-outline-custom {
+            border: 2px solid #4318FF;
+            color: #4318FF;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background-color: #4318FF;
+            color: white;
+        }
+
+        /* Feature Cards */
+        .feature-box {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px; /* Nice rounded corners */
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.12); /* Soft, premium shadow */
+            text-align: center;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px); /* Hover effect */
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #F4F7FE;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: #4318FF;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-text {
+            color: #A3AED0;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">StudyMind.AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <a class="nav-link text-dark fw-semibold" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="btn btn-outline-custom" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-custom" href="{% url 'register' %}">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Study Smarter,<br>Not <span>Harder</span></h1>
+            <p class="hero-subtitle">
+                Analyze your study habits, track your progress, and let our intelligent engine help you organize your academic life efficiently.
+            </p>
+            <a href="{% url 'register' %}" class="btn btn-custom btn-lg">Get Started Free</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="container my-5 pb-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold" style="color: #2B3674;">Why choose StudyMind AI?</h2>
+            <p style="color: #A3AED0;">Everything you need to excel in your studies, in one simple dashboard.</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="icon-circle">⏱️</div>
+                    <h3 class="feature-title">Smart Tracking</h3>
+                    <p class="feature-text">Easily log your study time, subjects, and focus levels every day with just a few clicks.</p>
+                </div>
+            </div>
+            <!-- Feature 2 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="icon-circle">📊</div>
+                    <h3 class="feature-title">Visual Progress</h3>
+                    <p class="feature-text">View clean, beautiful summaries of how much you are studying and where you need improvement.</p>
+                </div>
+            </div>
+            <!-- Feature 3 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="icon-circle">🤖</div>
+                    <h3 class="feature-title">AI Insights</h3>
+                    <p class="feature-text">Get automated tips on when and how to study based on your past data and habits.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

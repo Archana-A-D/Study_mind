@@ -1,0 +1,17 @@
+{% extends "student/manage/layout.html" %}
+
+{% block title %}Delete Assignment - StudyMind AI{% endblock %}
+
+{% block content %}
+<div class="card card-soft p-4">
+    <h4 class="fw-bold mb-2">Delete Assignment</h4>
+    <p class="text-muted mb-4">Delete <strong>{{ assignment.title }}</strong> ({{ assignment.subject.name }})?</p>
+
+    <form method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button class="btn btn-danger" style="border-radius: 12px; font-weight: 600;" type="submit">Yes, delete</button>
+        <a class="btn btn-outline-secondary" style="border-radius: 12px; font-weight: 600;" href="{% url 'manage_assignments' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - StudyMind AI</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FE;
+            color: #2B3674;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.12); /* Elegant shadow */
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-title {
+            font-weight: 700;
+            color: #2B3674;
+            margin-bottom: 10px;
+        }
+
+        .auth-subtitle {
+            color: #A3AED0;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 20px;
+            border: 1px solid #E0E5F2;
+            color: #2B3674;
+            background-color: #fcfcfc;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #4318FF;
+            background-color: white;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2B3674;
+            margin-bottom: 8px;
+        }
+
+        .btn-custom {
+            background-color: #4318FF;
+            color: white;
+            padding: 14px;
+            border-radius: 15px;
+            font-weight: 600;
+            border: none;
+            width: 100%;
+            box-shadow: 0 10px 20px rgba(67, 24, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #3311DB;
+            transform: translateY(-2px);
+        }
+
+        .auth-link {
+            color: #4318FF;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="text-center">
+            <h2 class="auth-title">Welcome Back 👋</h2>
+            <p class="auth-subtitle">Enter your details to sign in to your accounts</p>
+        </div>
+
+        {% if messages %}
+        <div class="alert alert-danger" style="border-radius: 12px; font-size: 0.9rem; padding: 10px 15px;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if form and form.errors %}
+        <div class="alert alert-danger" style="border-radius: 12px; font-size: 0.9rem; padding: 10px 15px;">
+            {% for error in form.non_field_errors %}
+                {{ error }}<br>
+            {% endfor %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    {{ error }}<br>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" name="email" id="email" required placeholder="mail@simple.com" value="{{ form.data.email|default:'' }}">
+            </div>
+            
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" required placeholder="Min. 8 characters">
+            </div>
+
+            <button type="submit" class="btn btn-custom">Sign In</button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p style="color: #A3AED0; font-size: 0.95rem;">
+                Not registered yet? <a href="{% url 'register' %}" class="auth-link">Create an Account</a>
+            </p>
+            <p style="color: #A3AED0; font-size: 0.85rem; margin-top: 15px;">
+                <a href="{% url 'index' %}" class="auth-link text-muted">← Back to Home</a>
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

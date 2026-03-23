@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manage - StudyMind AI{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F4F7FE;
+            font-family: 'Poppins', sans-serif;
+            color: #2B3674;
+        }
+        .navbar-custom {
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+        .card-soft {
+            background: white;
+            border-radius: 18px;
+            border: none;
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.08);
+        }
+        .btn-primary-soft {
+            background-color: #4318FF;
+            border-color: #4318FF;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .btn-primary-soft:hover { background-color: #3311DB; border-color: #3311DB; }
+        .link-soft { color: #4318FF; font-weight: 600; text-decoration: none; }
+        .link-soft:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold" style="color:#4318FF;" href="{% url 'user_dashboard' %}">StudyMind.AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navManage">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navManage">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'user_dashboard' %}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'manage_subjects' %}">Subjects</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'manage_assignments' %}">Assignments</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="{% url 'manage_sessions' %}">Sessions</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-danger btn-sm fw-semibold" style="border-radius: 10px;" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} mb-2" style="border-radius: 12px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

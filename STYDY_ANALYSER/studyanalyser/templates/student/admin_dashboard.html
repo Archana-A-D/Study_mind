@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - StudyMind AI</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #F4F7FE;
+            font-family: 'Poppins', sans-serif;
+            color: #2B3674;
+        }
+
+        /* Top Navbar */
+        .navbar-custom {
+            background-color: #111C44;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Sidebar container */
+        .sidebar {
+            min-height: calc(100vh - 80px);
+            background: white;
+            border-radius: 20px;
+            padding: 20px 10px;
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.05);
+            margin-left: 15px;
+        }
+
+        .sidebar a {
+            color: #A3AED0;
+            text-decoration: none;
+            padding: 12px 20px;
+            display: block;
+            font-weight: 600;
+            border-radius: 12px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            color: #4318FF;
+            background: #F4F7FE;
+        }
+
+        /* Elegant Widget Cards */
+        .widget-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.08);
+            border: none;
+            padding: 20px;
+            height: 100%;
+        }
+
+        .widget-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .widget-bg-blue { background: #F4F7FE; color: #4318FF; }
+        .widget-bg-green { background: #E6F8ED; color: #05CD99; }
+        .widget-bg-orange { background: #FFF4E5; color: #FFB547; }
+        .widget-bg-red { background: #FEECEB; color: #EE5D50; }
+
+        .widget-title { color: #A3AED0; font-size: 0.9rem; font-weight: 600; }
+        .widget-value { font-size: 1.8rem; font-weight: 700; color: #2B3674; margin-bottom: 0;}
+
+        /* Tables & Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.08);
+            border: none;
+            padding: 25px;
+        }
+
+        .table > :not(caption) > * > * {
+            border-bottom-color: #E0E5F2;
+            padding: 15px 10px;
+            color: #2B3674;
+            vertical-align: middle;
+        }
+
+        .table th {
+            color: #A3AED0;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-custom-outline {
+            background-color: transparent;
+            color: #4318FF;
+            padding: 6px 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid #4318FF;
+            transition: all 0.3s ease;
+        }
+        .btn-custom-outline:hover { background-color: #4318FF; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-custom">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <h4 class="fw-bold mb-0 text-white">System Admin</h4>
+            <div>
+                <span class="text-white-50 fw-semibold me-3">Logged in as {{ request.user.username }}</span>
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-light" style="border-radius: 10px; font-weight: 600;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mb-5">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-md-2 d-none d-md-block">
+                <div class="sidebar" role="tablist">
+                    <h6 class="text-uppercase text-muted fw-bold px-3 mb-3" style="font-size: 0.75rem;">Admin Panel</h6>
+                    <a href="#overview" data-bs-toggle="tab" data-bs-target="#overview" role="tab" class="active">Platform Overview</a>
+                    <a href="#users" data-bs-toggle="tab" data-bs-target="#users" role="tab">User Management</a>
+                    <a href="#sessions" data-bs-toggle="tab" data-bs-target="#sessions" role="tab">All Sessions</a>
+                    <a href="#settings" data-bs-toggle="tab" data-bs-target="#settings" role="tab">Platform Settings</a>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-10 pe-4">
+                <div class="tab-content">
+                    <!-- Overview -->
+                    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                        <h5 class="fw-bold mb-4">Platform Overview</h5>
+
+                        <!-- Stat Cards Row -->
+                        <div class="row mb-4 g-4">
+                            <div class="col-md-3">
+                                <div class="widget-card d-flex align-items-center">
+                                    <div class="widget-icon widget-bg-blue me-3">U</div>
+                                    <div>
+                                        <h6 class="widget-title">Total Users</h6>
+                                        <h3 class="widget-value">{{ total_users }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="widget-card d-flex align-items-center">
+                                    <div class="widget-icon widget-bg-green me-3">A</div>
+                                    <div>
+                                        <h6 class="widget-title">Active Today</h6>
+                                        <h3 class="widget-value">{{ active_today }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="widget-card d-flex align-items-center">
+                                    <div class="widget-icon widget-bg-orange me-3">S</div>
+                                    <div>
+                                        <h6 class="widget-title">Total Sessions</h6>
+                                        <h3 class="widget-value">{{ total_sessions }}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="widget-card d-flex align-items-center">
+                                    <div class="widget-icon widget-bg-red me-3">!</div>
+                                    <div>
+                                        <h6 class="widget-title">System Alerts</h6>
+                                        <h3 class="widget-value">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Users Table -->
+                        <div class="content-card">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="fw-bold mb-0">Recently Registered Users</h5>
+                                <a class="btn btn-custom-outline" href="#users" data-bs-toggle="tab" data-bs-target="#users" role="tab">View All</a>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-borderless mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email / Username</th>
+                                            <th>Joined Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for u in recent_users %}
+                                        <tr>
+                                            <td class="fw-semibold">{{ u.get_full_name|default:u.username }}</td>
+                                            <td>{{ u.email|default:u.username }}</td>
+                                            <td>{{ u.date_joined|date:"Y-m-d" }}</td>
+                                            <td><span class="badge bg-success" style="border-radius: 8px;">Active</span></td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">No users found.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users -->
+                    <div class="tab-pane fade" id="users" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0">User Management</h5>
+                            <a class="btn btn-custom-outline" href="/admin/" target="_blank" rel="noreferrer">Open Django Admin</a>
+                        </div>
+
+                        <div class="content-card">
+                            <div class="table-responsive">
+                                <table class="table table-borderless mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email / Username</th>
+                                            <th>Joined</th>
+                                            <th>Staff</th>
+                                            <th>Last Login</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for u in users %}
+                                        <tr>
+                                            <td class="fw-semibold">{{ u.get_full_name|default:"-" }}</td>
+                                            <td>{{ u.email|default:u.username }}</td>
+                                            <td>{{ u.date_joined|date:"Y-m-d" }}</td>
+                                            <td>
+                                                {% if u.is_staff %}
+                                                    <span class="badge bg-primary" style="border-radius: 8px;">Yes</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary" style="border-radius: 8px;">No</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ u.last_login|date:"Y-m-d H:i"|default:"-" }}</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No users found.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sessions -->
+                    <div class="tab-pane fade" id="sessions" role="tabpanel">
+                        <h5 class="fw-bold mb-4">All Sessions</h5>
+
+                        <div class="content-card">
+                            <div class="table-responsive">
+                                <table class="table table-borderless mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>When</th>
+                                            <th>User</th>
+                                            <th>Subject</th>
+                                            <th>Assignment</th>
+                                            <th>Hours</th>
+                                            <th>Focus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for s in sessions %}
+                                        <tr>
+                                            <td>{{ s.created_at|date:"Y-m-d H:i" }}</td>
+                                            <td class="fw-semibold">{{ s.user.email|default:s.user.username }}</td>
+                                            <td>
+                                                {% if s.subject %}
+                                                    {{ s.subject.name }}
+                                                {% else %}
+                                                    {{ s.legacy_subject|default:"-" }}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if s.assignment %}
+                                                    {{ s.assignment.title }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="fw-semibold">{{ s.duration }}</td>
+                                            <td>{{ s.focus_level }}%</td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">No sessions found.</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="tab-pane fade" id="settings" role="tabpanel">
+                        <h5 class="fw-bold mb-4">Platform Settings</h5>
+
+                        <div class="row g-4">
+                            <div class="col-lg-7">
+                                <div class="content-card">
+                                    <h6 class="fw-bold mb-3">Runtime Configuration (Read-only)</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless mb-0">
+                                            <tbody>
+                                                {% for k, v in platform_settings.items %}
+                                                <tr>
+                                                    <td class="text-muted" style="width: 220px;">{{ k }}</td>
+                                                    <td class="fw-semibold">{{ v|default:"-" }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="text-muted mt-3" style="font-size: 0.9rem;">
+                                        To change these, update environment variables or <code>settings.py</code>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="content-card">
+                                    <h6 class="fw-bold mb-3">Admin Tools</h6>
+                                    <p class="text-muted mb-3" style="font-size: 0.95rem;">
+                                        For advanced actions (create staff users, edit models, etc.), use Django’s built-in admin.
+                                    </p>
+                                    <a class="btn btn-custom-outline w-100 mb-2" href="/admin/" target="_blank" rel="noreferrer">Open Django Admin</a>
+                                    <a class="btn btn-custom-outline w-100" href="{% url 'user_dashboard' %}">Back to Student Dashboard</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var hash = window.location.hash;
+            var targetTab = hash || sessionStorage.getItem('activeAdminTab');
+
+            if (targetTab) {
+                var tabEl = document.querySelector('.sidebar a[href="' + targetTab + '"]');
+                if (tabEl) {
+                    var tab = new bootstrap.Tab(tabEl);
+                    tab.show();
+                }
+            }
+
+            var tabLinks = document.querySelectorAll('.sidebar a[data-bs-toggle="tab"]');
+            tabLinks.forEach(function(tabLink) {
+                tabLink.addEventListener('shown.bs.tab', function(event) {
+                    var currentTab = event.target.getAttribute('href');
+                    sessionStorage.setItem('activeAdminTab', currentTab);
+                    window.history.replaceState(null, null, currentTab);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

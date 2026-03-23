@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Up Your Classes - StudyMind AI</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            background-color: #F4F7FE; 
+            font-family: 'Poppins', sans-serif;
+            color: #2B3674;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .onboarding-card {
+            background: white;
+            border-radius: 20px; 
+            box-shadow: 0 15px 40px rgba(112, 144, 176, 0.08); 
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .btn-custom {
+            background-color: #4318FF;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover { 
+            background-color: #3311DB; 
+            color: white; 
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 1px solid #E0E5F2;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #4318FF;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center">
+        <div class="onboarding-card">
+            <div class="text-center mb-4">
+                <h3 class="fw-bold" style="color: #2B3674;">Welcome to StudyMind AI 👋</h3>
+                <p class="text-muted">Let's set up your personal study analyzer.</p>
+            </div>
+
+            {% if form and form.errors %}
+            <div class="alert alert-danger" style="border-radius: 12px; font-size: 0.9rem; padding: 10px 15px;">
+                {% for error in form.non_field_errors %}
+                    {{ error }}<br>
+                {% endfor %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'onboarding' %}">
+                {% csrf_token %}
+                
+                <h6 class="fw-bold mb-3 text-primary">1. What subjects are you studying?</h6>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Subjects (Comma Separated)</label>
+                    <input type="text" name="subjects" class="form-control" placeholder="e.g. Mathematics, Physics, Computer Science" required value="{{ form.data.subjects|default:'' }}">
+                    <div class="form-text text-muted">We need at least one subject to analyze your focus patterns.</div>
+                </div>
+
+                <hr class="mb-4" style="opacity: 0.1;">
+
+                <h6 class="fw-bold mb-3 text-primary">2. Add an Upcoming Assignment (Optional)</h6>
+                <p class="text-muted" style="font-size: 0.85rem;">We'll prioritize this in your AI Study Plan.</p>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Task/Assignment Title</label>
+                    <input type="text" name="assignment_title" class="form-control" placeholder="e.g. Chapter 4 Math Worksheet" value="{{ form.data.assignment_title|default:'' }}">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Subject Context</label>
+                        <input type="text" name="assignment_subject" class="form-control" placeholder="e.g. Mathematics" value="{{ form.data.assignment_subject|default:'' }}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-semibold">Deadline</label>
+                        <input type="date" name="assignment_deadline" class="form-control" value="{{ form.data.assignment_deadline|default:'' }}">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Estimated Hours Needed</label>
+                    <input type="number" step="0.5" name="estimated_hours" class="form-control" placeholder="e.g. 2.0" value="{{ form.data.estimated_hours|default:'' }}">
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100 mt-2">Finish Setup & Go To Dashboard ✨</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
